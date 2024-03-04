@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/button.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
@@ -15,6 +17,45 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  void signIn() async {
+    showDialog(context: context, builder:(context){
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    });
+
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text
+      );
+      if(context.mounted){
+        Navigator.pop(context);
+      }
+    } on FirebaseAuthException catch(e){
+      Navigator.pop(context);
+      var codes = {
+        'invalid-email': 'Email adresiniz geçersiz',
+        'invalid-credential': 'Email adresi veya şifre hatalı.'
+      };
+      print(e.code);
+      DisplayMessage(
+          codes.containsKey(e.code) ?
+          codes[e.code].toString() :
+          e.code
+      );
+    }
+
+  }
+
+  void DisplayMessage(String message){
+    showDialog(context: context, builder:(context){
+      return AlertDialog(
+        title: Text(message),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +73,9 @@ class _LoginState extends State<Login> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FadeIn (
+                    FadeIn(
                       duration: Duration(milliseconds: 1000),
-                      child:  Image.asset(
+                      child: Image.asset(
                         'assets/login.png',
                         width: 300,
                       ),
@@ -42,12 +83,13 @@ class _LoginState extends State<Login> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Text("Tekrar hoşgeldin, seni özledik!",style: TextStyle(color: Colors.grey[700])),
+                    Text("Tekrar hoşgeldin, seni özledik!",
+                        style: TextStyle(color: Colors.grey[700])),
                     const SizedBox(
                       height: 25,
                     ),
                     FadeInDown(
-                      duration: Duration(milliseconds: 800),
+                      duration: Duration(milliseconds: 500),
                       child: MyTextField(
                           controller: emailController,
                           hintText: 'Email adresiniz',
@@ -57,31 +99,38 @@ class _LoginState extends State<Login> {
                       height: 10,
                     ),
                     FadeInDown(
-                        duration: Duration(milliseconds: 1200),
-                        child:  MyTextField(
+                        duration: Duration(milliseconds: 600),
+                        child: MyTextField(
                             controller: passwordController,
                             hintText: 'Şifreniz',
-                            obscureText: true)
-                    ),
+                            obscureText: true)),
                     const SizedBox(
                       height: 10,
                     ),
                     FadeInUp(
-                        duration: Duration(milliseconds: 1000),
-                        child:  MyButton(onTap: () {}, text: "Giriş yap")
-                    ),
+                        duration: Duration(milliseconds: 700),
+                        child: MyButton(onTap: signIn, text: "Giriş yap")),
                     const SizedBox(
                       height: 25,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Üye değil misin?', style: TextStyle(color: Colors.grey[700]),),
-                        SizedBox(width: 4,),
+                        Text(
+                          'Üye değil misin?',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
                         GestureDetector(
                           onTap: widget.onTap,
-                          child: Text('Kayıt ol',
-                            style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),),
+                          child: const Text(
+                            'Kayıt ol',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ],
                     )
