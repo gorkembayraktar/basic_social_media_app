@@ -21,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final password2Controller = TextEditingController();
 
-  void SignUp() async {
+  Future<void> SignUp() async {
     ShowDialogLoading(context);
 
     if(passwordController.text != password2Controller.text){
@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try{
       UserCredential credential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
 
-      FirebaseFirestore.instance.collection(STRINGS.CollectionUsers).doc(
+      await FirebaseFirestore.instance.collection(STRINGS.CollectionUsers).doc(
           credential.user!.email
       ).set(
         {
@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(

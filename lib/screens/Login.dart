@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -120,7 +120,8 @@ class _LoginState extends State<Login> {
                             'Kayıt ol',
                             style: TextStyle(
                                 color: Colors.blue,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold
+                            ),
                           ),
                         ),
                       ],

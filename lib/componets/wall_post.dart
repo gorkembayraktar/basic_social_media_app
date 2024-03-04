@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/comments.dart';
 import 'package:minimal_social_media_app/componets/comments_button.dart';
+import 'package:minimal_social_media_app/componets/delete_button.dart';
 import 'package:minimal_social_media_app/componets/like_button.dart';
 import 'package:minimal_social_media_app/helper/helper_methods.dart';
 import 'package:minimal_social_media_app/string_constants.dart';
@@ -97,6 +98,82 @@ class _WallPostState extends State<WallPost> {
         });
   }
 
+  void deletePost(){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Postu Sil'),
+            content: Text('Postu silmek istediğinize emin misiniz?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Vazgeç',style: TextStyle(color: Colors.grey[300]))),
+              TextButton(
+                  onPressed: () async{
+
+                    final commentsDoc = await FirebaseFirestore.instance
+                    .collection(STRINGS.CollectionPostsName)
+                    .doc(widget.postId)
+                    .collection(STRINGS.CollectionPostComments)
+                    .get();
+
+                    for(var doc in commentsDoc.docs){
+                      await FirebaseFirestore.instance
+                          .collection(STRINGS.CollectionPostsName)
+                          .doc(widget.postId)
+                          .collection(STRINGS.CollectionPostComments)
+                          .doc(doc.id)
+                          .delete();
+                    }
+                    FirebaseFirestore.instance
+                        .collection(STRINGS.CollectionPostsName)
+                        .doc(widget.postId).delete().then(
+                        (value)=>print('post deleted!'))
+                        .catchError((error) => print('failed delete post $error') );
+
+                    Navigator.pop(context);
+                  },
+                  child: Text('Sil', style: TextStyle(color: Colors.white),)
+              )
+            ],
+          );
+        });
+  }
+
+  void deleteComment(String id){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Yorumu Sil'),
+            content: Text('Yorumu silmek istediğinize emin misiniz?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Vazgeç',style: TextStyle(color: Colors.grey[300]))),
+              TextButton(
+                  onPressed: () async{
+                      await FirebaseFirestore.instance
+                          .collection(STRINGS.CollectionPostsName)
+                          .doc(widget.postId)
+                          .collection(STRINGS.CollectionPostComments)
+                          .doc(id)
+                          .delete();
+
+                    Navigator.pop(context);
+                  },
+                  child: Text('Yorumu Sil', style: TextStyle(color: Colors.white),)
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -109,30 +186,37 @@ class _WallPostState extends State<WallPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.message),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.user,
-                    style: TextStyle(color: Colors.grey[500]),
+                  Text(widget.message),
+                  SizedBox(
+                    height: 10,
                   ),
-                  Text(
-                    widget.time,
-                    style: TextStyle(color: Colors.grey[500]),
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.user,
+                        style: TextStyle(color: Colors.grey[500]),
+                      ),
+                      Text(
+                        widget.time,
+                        style: TextStyle(color: Colors.grey[500]),
+                      ),
+                    ],
+                  )
+
+
                 ],
-              )
+              ),
 
-
+              if(widget.user == currentUser.email)
+              DeleteButton(onTap: deletePost)
             ],
           ),
           const SizedBox(
@@ -184,7 +268,8 @@ class _WallPostState extends State<WallPost> {
                     return Comment(
                         text: commentData['CommentText'],
                         user: commentData['CommentBy'],
-                        time: formatDate(commentData['CommentTime'])
+                        time: formatDate(commentData['CommentTime']),
+                        onTap: () => deleteComment(doc.id)
                     );
                   }).toList(),
 

@@ -12,6 +12,7 @@ void ShowDialogLoading(context){
 void DisplayMessage(BuildContext context, String message){
   showDialog(context: context, builder:(context){
     return AlertDialog(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       title: Text(message),
     );
   });
