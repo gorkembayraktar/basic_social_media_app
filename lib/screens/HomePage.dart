@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_social_media_app/componets/drawer.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
 import 'package:minimal_social_media_app/componets/wall_post.dart';
+import 'package:minimal_social_media_app/screens/ProfilePage.dart';
 import 'package:minimal_social_media_app/string_constants.dart';
 
 class HomePage extends StatefulWidget {
@@ -31,10 +33,25 @@ class _HomePageState extends State<HomePage> {
       }
   }
 
+  void gotoProfilePage(){
+    Navigator.pop(context);
+    Navigator.push(context,
+      MaterialPageRoute(builder: (context) => const ProfilePage())
+    );
+
+  }
+  void logout(){
+      FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
+      drawer: MyDrawer(
+        onProfileTap: gotoProfilePage,
+        onSignoutTap: logout,
+      ),
       appBar: AppBar(
         centerTitle: true,
         foregroundColor: Colors.white,
