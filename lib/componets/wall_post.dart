@@ -110,7 +110,7 @@ class _WallPostState extends State<WallPost> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Vazgeç',style: TextStyle(color: Colors.grey[300]))),
+                  child: Text('Vazgeç')),
               TextButton(
                   onPressed: () async{
 
@@ -136,7 +136,7 @@ class _WallPostState extends State<WallPost> {
 
                     Navigator.pop(context);
                   },
-                  child: Text('Sil', style: TextStyle(color: Colors.white),)
+                  child: Text('Sil',)
               )
             ],
           );
@@ -155,7 +155,7 @@ class _WallPostState extends State<WallPost> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Vazgeç',style: TextStyle(color: Colors.grey[300]))),
+                  child: Text('Vazgeç')),
               TextButton(
                   onPressed: () async{
                       await FirebaseFirestore.instance
@@ -167,7 +167,7 @@ class _WallPostState extends State<WallPost> {
 
                     Navigator.pop(context);
                   },
-                  child: Text('Yorumu Sil', style: TextStyle(color: Colors.white),)
+                  child: Text('Yorumu Sil',)
               )
             ],
           );
@@ -204,6 +204,7 @@ class _WallPostState extends State<WallPost> {
                         widget.user,
                         style: TextStyle(color: Colors.grey[500]),
                       ),
+                      SizedBox(width: 10,),
                       Text(
                         widget.time,
                         style: TextStyle(color: Colors.grey[500]),
