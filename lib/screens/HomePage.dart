@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/drawer.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
 import 'package:minimal_social_media_app/componets/wall_post.dart';
+import 'package:minimal_social_media_app/helper/helper_methods.dart';
 import 'package:minimal_social_media_app/screens/ProfilePage.dart';
 import 'package:minimal_social_media_app/string_constants.dart';
 
@@ -83,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                     return WallPost(
                         message: post['Message'],
                         user: post['UserEmail'],
+                        time: formatDate(post['TimeStamp']),
                         postId: post.id,
                         likes: List<String>.from(post['Likes'])
                     );
