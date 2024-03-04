@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/button.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:minimal_social_media_app/utils/widget.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -16,6 +18,34 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final password2Controller = TextEditingController();
+
+  void SignUp() async {
+    ShowDialogLoading(context);
+
+    if(passwordController.text != password2Controller.text){
+      Navigator.pop(context);
+      DisplayMessage(context, 'Şifreler eşleşmiyor');
+    }
+    try{
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      if(context.mounted){
+        Navigator.pop(context);
+      }
+    } on FirebaseAuthException catch(e){
+      var codes = {
+        'email-already-in-use': 'Email adresi zaten kullanılıyor',
+        'weak-password': 'En az 6 karakterli şifre giriniz',
+        'invalid-email': 'Email adresi geçersiz!',
+        'invalid-credential': 'Email adresi veya şifre hatalı.'
+      };
+      Navigator.pop(context);
+      DisplayMessage(context, codes.containsKey(e.code) ?
+      codes[e.code].toString() :
+      e.code);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -82,7 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     BounceInUp(
                         duration: Duration(milliseconds: 1000),
-                        child:  MyButton(onTap: () {}, text: "Kayıt ol")
+                        child:  MyButton(onTap: SignUp, text: "Kayıt ol")
                     ),
 
                     const SizedBox(

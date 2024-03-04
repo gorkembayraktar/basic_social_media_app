@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/button.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
+import 'package:minimal_social_media_app/utils/widget.dart';
 
 class Login extends StatefulWidget {
   final Function()? onTap;
@@ -19,11 +20,7 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   void signIn() async {
-    showDialog(context: context, builder:(context){
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    });
+    ShowDialogLoading(context);
 
     try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -41,6 +38,7 @@ class _LoginState extends State<Login> {
       };
       print(e.code);
       DisplayMessage(
+          context,
           codes.containsKey(e.code) ?
           codes[e.code].toString() :
           e.code
@@ -49,13 +47,6 @@ class _LoginState extends State<Login> {
 
   }
 
-  void DisplayMessage(String message){
-    showDialog(context: context, builder:(context){
-      return AlertDialog(
-        title: Text(message),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
