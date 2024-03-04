@@ -24,7 +24,8 @@ class _HomePageState extends State<HomePage> {
         ).add({
             'UserEmail': currentUser!.email,
             'Message' : textController.text,
-            'TimeStamp': Timestamp.now()
+            'TimeStamp': Timestamp.now(),
+            'Likes': []
         });
         textController.clear();
       }
@@ -61,8 +62,13 @@ class _HomePageState extends State<HomePage> {
                   return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context,index){
-                    final post = snapshot.data!.docs[index];
-                    return WallPost(message: post['Message'], user: post['UserEmail']);
+                      QueryDocumentSnapshot post = snapshot.data!.docs[index];
+                    return WallPost(
+                        message: post['Message'],
+                        user: post['UserEmail'],
+                        postId: post.id,
+                        likes: List<String>.from(post['Likes'])
+                    );
                   });
                 }else if(snapshot.hasError){
                   return Text(snapshot.error.toString());
