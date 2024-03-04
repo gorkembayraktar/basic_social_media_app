@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:minimal_social_media_app/screens/Login.dart';
+import 'package:minimal_social_media_app/auth/login_or_register.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ZAK',
-      home: Login(),
+      home: LoginOrRegister(),
     );
   }
 }
