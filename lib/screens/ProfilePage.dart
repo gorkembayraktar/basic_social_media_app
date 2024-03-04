@@ -63,8 +63,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
-        foregroundColor: Colors.white,
         title: Text('Profil Sayfası'),
       ),
       body: StreamBuilder<DocumentSnapshot>(

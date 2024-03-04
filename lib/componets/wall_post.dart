@@ -30,6 +30,7 @@ class _WallPostState extends State<WallPost> {
   final currentUser = FirebaseAuth.instance.currentUser!;
   bool isLiked = false;
   final commentTextController = TextEditingController();
+  int commentCount = 0;
 
   @override
   void initState() {
@@ -100,7 +101,9 @@ class _WallPostState extends State<WallPost> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(8)
+      ),
       margin: EdgeInsets.only(top: 25, left: 25, right: 25),
       padding: EdgeInsets.all(25),
       child: Column(
@@ -154,7 +157,7 @@ class _WallPostState extends State<WallPost> {
                   SizedBox(
                     height: 5,
                   ),
-                  Text("0")
+                  Text(commentCount.toString())
                 ],
               ),
 
@@ -169,6 +172,10 @@ class _WallPostState extends State<WallPost> {
                     child: CircularProgressIndicator(),
                   );
                 }
+
+                commentCount = snapshot.data!.docs.length;
+
+
                 return ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

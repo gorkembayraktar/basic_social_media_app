@@ -48,16 +48,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Theme.of(context).colorScheme.background,
       drawer: MyDrawer(
         onProfileTap: gotoProfilePage,
         onSignoutTap: logout,
       ),
       appBar: AppBar(
         centerTitle: true,
-        foregroundColor: Colors.white,
-        title: Text('ZAK'),
-        backgroundColor: Colors.grey[900],
+
+        title: Text(STRINGS.APP_NAME),
         actions: [
           IconButton(
             onPressed: signOut,
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            Text("giriş yapan : ${currentUser!.email!}")
+            Text("giriş yapan : ${currentUser!.email!}", style: TextStyle(color: Colors.grey),)
           ],
         ),
       ),
