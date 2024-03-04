@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/componets/button.dart';
 import 'package:minimal_social_media_app/componets/text_field.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:minimal_social_media_app/string_constants.dart';
 import 'package:minimal_social_media_app/utils/widget.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -27,7 +29,17 @@ class _RegisterPageState extends State<RegisterPage> {
       DisplayMessage(context, 'Şifreler eşleşmiyor');
     }
     try{
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+      UserCredential credential =  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+
+      FirebaseFirestore.instance.collection(STRINGS.CollectionUsers).doc(
+          credential.user!.email
+      ).set(
+        {
+          'username' : emailController.text.split('@')[0], // inital username
+          'bio': 'Boş bio'
+        }
+      );
+
       if(context.mounted){
         Navigator.pop(context);
       }
