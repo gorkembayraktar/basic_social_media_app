@@ -7,7 +7,6 @@ import 'package:minimal_social_media_app/firebase_options.dart';
 
 void main()  async {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
 
